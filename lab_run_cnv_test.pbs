@@ -114,3 +114,20 @@ Rscript $SCRIPT_PATH/runCNDtest.R  --c_name $c_sample_name --c_pileup $c_pileup 
 --ordered_genes $ordered_genes --db_h $db_h --db_u $db_u --db_p $db_p --db_d $db_d --db_s $db_s --p 0
 
 mysqladmin --socket=$INSTALL_PATH/mysql/thesock shutdown -u root
+
+rm -rf *.pbs.*
+rm -rf *.gz
+rm -rf calibrate
+rm -rf DBI
+rm -rf getopt
+rm -rf MASS 
+rm -rf mysq*
+rm -rf optparse
+rm -rf plotrix
+rm -rf RMySQL
+rm -rf zoo
+rm -rf *.sql
+rm -rf test_cnv_*
+rm -rf *~
+rm -rf ordered_genes.txt
+rm -rf CopyNumberDeletion.R
