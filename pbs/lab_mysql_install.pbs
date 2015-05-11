@@ -1,43 +1,16 @@
-# PUT FILES THAT WILL BE NEEDED IN S3
-cp /home/support/public/tutorials/Agro5999/mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz .
+#!/bin/bash                             
+#PBS -l nodes=1:ppn=4,mem=15gb,walltime=2:00:00
+#PBS -m abe
+#PBS -M onson001@umn.edu
 
-s3cmd put mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz s3://CNVMySQL
-
-cd /home/msistaff/onson001/Fairview/cnv/tso_launcher_v1.2/tso_tables
-
-tar -cvzf mysql_tables.tar.gz training_data.sql tso_data.sql tso_exon_60bp_segments_main_data.sql tso_exon_60bp_segments_pileup.sql tso_exon_60bp_segments_window_data.sql tso_exon_contig_pileup.sql tso_reference_exon.sql tso_reference.sql tso_windows_padded_pileup.sql
-
-s3cmd put mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz s3://CNVMySQL
-
-cd 
-
-mkdir cnv_test_data
-
-cd cnv_test_data
-
-cp /home/msistaff/onson001/Fairview/cnv/code/cnv-galaxy/galaxy-wrapper/test_cnv_* .
-
-tar -cvzf cnv_test_data.tar.gz test_cnv_07_2151_tso_bowtie_pileup.txt test_cnv_07_2151_tso_pileup.txt test_cnv_11_05910_tso_bwa_pileup.txt test_cnv_07_2151_tso_bwa_pileup.txt test_cnv_11_05910_tso_bowtie_pileup.txt test_cnv_11_05910_tso_pileup.txt
-
-s3cmd put cnv_test_data.tar.gz s3://CNVMySQL
-
-
-# SET PERMISSIONS TO WORLD READABLE 
-s3cmd setacl -P -r s3://CNVMySQL
-
-https://s3.msi.umn.edu/CNVMySQL/mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz
-
-https://s3.msi.umn.edu/CNVMySQL/mysql_tables.tar.gz
-
-https://s3.msi.umn.edu/CNVMySQL/cnv_test_data.tar.gz
-
-# NOW THE INSTAL PROCESS
 INSTALL_PATH=/home/msistaff/onson001/local_install/cnv
+MYSQL_LOAD_WAIT=120
+
+cd $INSTALL_PATH
 
 wget https://s3.msi.umn.edu/CNVMySQL/mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz
 
 tar xzvf mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz
-
 
 # SET UP THE mysql DATA DIRECTORY INSTALL
 mkdir -p mysql/data
@@ -46,25 +19,29 @@ cd $INSTALL_PATH/mysql-5.6.24-linux-glibc2.5-x86_64
 
 ./scripts/mysql_install_db -datadir=$INSTALL_PATH/mysql/data
 
-# MAKE ENVIRONMENT AWARE OF PATH TO MYSQL EXECUTABLES 
+cd $INSTALL_PATH
+
+# MAKE ENVIRONMENT AWARE OF PATH TO MYSQL EXECUTABLES
 export PATH=$INSTALL_PATH/mysql-5.6.24-linux-glibc2.5-x86_64/bin:$PATH
 
-
-# START MYSQL
-
-INSTALL_PATH=/home/msistaff/onson001/local_install/cnv
-
-export PATH=$INSTALL_PATH/mysql-5.6.24-linux-glibc2.5-x86_64/bin:$PATH
-
+# START MYSQL 
 mysqld --innodb_buffer_pool_size=4G --basedir=$INSTALL_PATH/mysql --datadir=$INSTALL_PATH/mysql/data --log-error=$INSTALL_PATH/mysql/data/mysql.err --pid-file=$INSTALL_PATH/mysql/mysql.pid --socket=$INSTALL_PATH/mysql/thesock --port=3306 --lc-messages-dir=$INSTALL_PATH/mysql-5.6.24-linux-glibc2.5-x86_64/share/english &
 
-sleep 120
+# CHECK TO MAKE SURE MYSQL HAS STARTED BEFORE PROCEEDING)
+#
+# I TRIED TO IMPLEMENT A ROBUST SOLUTION BUT IT IS STILL BUGGY. AS A SHORT TERM FIX, I WILL USE THE SLEEP 
+# COMMAND. NOTE: THIS WILL ONLY WORK IF MySQL LOAD WITHIN THE TIME LIMIT SET BY SLEEP
+#
+# echo "start MySQL"
+# UP=$(pgrep mysql | wc -l);
+# while [ "$UP" -ne 1 ]; do
+#     UP=$(pgrep mysql | wc -l);
+# done
+# echo "MySQL successfully started"
+sleep $MYSQL_LOAD_WAIT
 
 # CREATE DATABASE
 mysql --socket=$INSTALL_PATH/mysql/thesock -u root -e "CREATE DATABASE cnv;"
-
-mysql --socket=$INSTALL_PATH/mysql/thesock -u root cnv
-
 
 # LOAD CNV TABLES
 wget https://s3.msi.umn.edu/CNVMySQL/mysql_tables.tar.gz

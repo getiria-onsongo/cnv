@@ -1,0 +1,38 @@
+#!/bin/bash                             
+#PBS -l nodes=1:ppn=4,mem=15gb,walltime=2:00:00
+#PBS -m abe
+#PBS -M onson001@umn.edu
+
+module load R/3.1.1
+
+INSTALL_PATH=/home/msistaff/onson001/local_install/cnv
+
+cd $INSTALL_PATH
+
+export PATH=$INSTALL_PATH/mysql-5.6.24-linux-glibc2.5-x86_64/bin:$PATH
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$INSTALL_PATH/mysql-5.6.24-linux-glibc2.5-x86_64/lib
+
+wget http://cran.r-project.org/src/contrib/MASS_7.3-40.tar.gz
+Rscript -e "install.packages(c('MASS_7.3-40.tar.gz'),lib='$INSTALL_PATH', repos=NULL, dependencies=FALSE)"
+
+wget http://cran.r-project.org/src/contrib/calibrate_1.7.2.tar.gz
+Rscript -e "install.packages(c('calibrate_1.7.2.tar.gz'),lib='$INSTALL_PATH', repos=NULL, dependencies=FALSE)"
+
+wget http://cran.r-project.org/src/contrib/getopt_1.20.0.tar.gz
+Rscript -e "install.packages(c('getopt_1.20.0.tar.gz'),lib='$INSTALL_PATH', repos=NULL, dependencies=FALSE)"
+
+wget http://cran.r-project.org/src/contrib/optparse_1.3.0.tar.gz
+Rscript -e "install.packages(c('optparse_1.3.0.tar.gz'),lib='$INSTALL_PATH', repos=NULL, dependencies=FALSE)"
+
+wget http://cran.r-project.org/src/contrib/plotrix_3.5-11.tar.gz
+Rscript -e "install.packages(c('plotrix_3.5-11.tar.gz'),lib='$INSTALL_PATH', repos=NULL, dependencies=FALSE)"
+
+wget http://cran.r-project.org/src/contrib/DBI_0.3.1.tar.gz
+Rscript -e "install.packages(c('DBI_0.3.1.tar.gz'),lib='$INSTALL_PATH', repos=NULL, dependencies=FALSE)"
+
+wget http://cran.r-project.org/src/contrib/RMySQL_0.10.3.tar.gz
+Rscript -e "install.packages(c('RMySQL_0.10.3.tar.gz'),lib='$INSTALL_PATH', repos=NULL, dependencies=FALSE)"
+
+wget http://cran.r-project.org/src/contrib/zoo_1.7-12.tar.gz
+Rscript -e "install.packages(c('zoo_1.7-12.tar.gz'),lib='$INSTALL_PATH', repos=NULL, dependencies=FALSE)"
