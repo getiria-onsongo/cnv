@@ -5,6 +5,10 @@ s3cmd put mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz s3://CNVMySQL
 
 s3cmd put CopyNumberDeletion.R s3://CNVMySQL
 
+cd /home/msistaff/onson001/Fairview/cnv/code/cnv-galaxy/myTools
+
+s3cmd put runCNDtest.R s3://CNVMySQL
+
 cd /home/msistaff/onson001/Fairview/cnv/tso_launcher_v1.2/tso_tables
 
 tar -cvzf mysql_tables.tar.gz training_data.sql tso_data.sql tso_exon_60bp_segments_main_data.sql tso_exon_60bp_segments_pileup.sql tso_exon_60bp_segments_window_data.sql tso_exon_contig_pileup.sql tso_reference_exon.sql tso_reference.sql tso_windows_padded_pileup.sql
@@ -34,6 +38,9 @@ https://s3.msi.umn.edu/CNVMySQL/mysql_tables.tar.gz
 https://s3.msi.umn.edu/CNVMySQL/cnv_test_data.tar.gz
 
 https://s3.msi.umn.edu/CNVMySQL/CopyNumberDeletion.R
+
+https://s3.msi.umn.edu/CNVMySQL/runCNDtest.R
+
 
 # NOW THE INSTAL PROCESS
 INSTALL_PATH=/home/msistaff/onson001/local_install/cnv
@@ -81,9 +88,17 @@ mysql --socket=$INSTALL_PATH/mysql/thesock -u root cnv < tso_exon_contig_pileup.
 mysql --socket=$INSTALL_PATH/mysql/thesock -u root cnv < tso_exon_60bp_segments_pileup.sql
 mysql --socket=$INSTALL_PATH/mysql/thesock -u root cnv < tso_exon_60bp_segments_window_data.sql
 mysql --socket=$INSTALL_PATH/mysql/thesock -u root cnv < tso_windows_padded_pileup.sql
+
 mysql --socket=$INSTALL_PATH/mysql/thesock -u root cnv < tso_data.sql
 mysql --socket=$INSTALL_PATH/mysql/thesock -u root cnv < training_data.sql
 mysql --socket=$INSTALL_PATH/mysql/thesock -u root cnv < tso_reference.sql
 
 # SHUTDOWN MYSQL
 mysqladmin --socket=$INSTALL_PATH/mysql/thesock shutdown -u root
+
+
+# Testing things on MSI toolshed
+
+Go to: http://toolshed.msi.umn.edu:18080/
+
+Installing: https://galaxy-ng.msi.umn.edu

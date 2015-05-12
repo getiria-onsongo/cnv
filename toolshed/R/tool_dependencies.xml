@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<tool_dependency>
+     <package name="R" version="3.1.2">
+        <repository name="package_r_3_1_2" owner="iuc" prior_installation_required="True" />
+    </package>
+    
+    <package name="test" version="0.0.1">
+        <install version="1.0">
+            <actions>
+
+-- ALL DOWNLOADS 
+
+                <action type="setup_r_environment">
+                    <repository  name="package_r_3_1_2" owner="iuc" >
+                        <package name="R" version="3.1.2" />
+                    </repository>
+		</action>
+
+		<action type="download_file">https://s3.msi.umn.edu/CNVMySQL/mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz</action>
+                <action type="shell_command">tar xfvz mysql-5.6.24-linux-glibc2.5-x86_64.tar.gz</action>
+                <action type="shell_command">mkdir -p mysql/data</action>
+		<action type="shell_command">cd $INSTALL_DIR/mysql-5.6.24-linux-glibc2.5-x86_64</action>
+		<action type="shell_command">./scripts/mysql_install_db -datadir=$INSTALL_DIR/mysql/data</action>
+		<action type="shell_command">cd $INSTALL_DIR</action>
+		<action type="shell_command">
+                    export PATH=$INSTALL_PATH/mysql-5.6.24-linux-glibc2.5-x86_64/bin:$PATH &amp;&amp; 
+		    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$INSTALL_DIR/mysql-5.6.24-linux-glibc2.5-x86_64/lib
+                </action>
+
+-- HERE 
+
+		<action type="shell_command"></action>
+		<action type="shell_command"></action>
+		<action type="shell_command"></action>
+		<action type="shell_command"></action>
+		<action type="shell_command"></action>
+		<action type="shell_command"></action>
+
+                <action type="move_directory_files">
+                    <source_directory>./glimmer3.02/bin</source_directory>
+                    <destination_directory>$INSTALL_DIR/bin</destination_directory>
+                </action>
+                <action type="set_environment">
+                    <environment_variable name="PATH" action="prepend_to">$INSTALL_DIR/bin</environment_variable>
+                </action>
+
+            </actions>
+        </install>
+        <readme>
+        </readme>
+    </package>
