@@ -102,3 +102,7 @@ mysqladmin --socket=$INSTALL_PATH/mysql/thesock shutdown -u root
 Go to: http://toolshed.msi.umn.edu:18080/
 
 Installing: https://galaxy-ng.msi.umn.edu
+
+To check; 
+
+/website/galaxy-ng.msi.umn.edu/shed_tools/toolshed.msi.umn.edu/repos/onsongo/
